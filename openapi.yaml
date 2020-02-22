@@ -14,11 +14,12 @@ paths:
   # FIXTURES
   #-------------------------------
   /tournaments/{tournamentId}/fixtures/{fixtureId}:
+    parameters:
+      - $ref: '#/components/parameters/tournamentIdParam'
+      - $ref: '#/components/parameters/fixtureIdParam'
+
     get:
       summary: Returns a fixture for a tournament.
-      parameters:
-        - $ref: '#/components/parameters/tournamentIdParam'
-        - $ref: '#/components/parameters/fixtureIdParam'
       responses:
         '200': # status code
           description: OK
@@ -29,9 +30,22 @@ paths:
 
     put:
       summary: Update a fixture of a tournament.
-      parameters:
-        - $ref: '#/components/parameters/tournamentIdParam'
-        - $ref: '#/components/parameters/fixtureIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Fixture'
+      responses:
+        '200': # status code
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FixtureWithId'
+
+    patch:
+      summary: Update a fixture of a tournament.
       requestBody:
         required: true
         content:
@@ -48,18 +62,16 @@ paths:
 
     delete:
       summary: Delete a fixture from a tournament.
-      parameters:
-        - $ref: '#/components/parameters/tournamentIdParam'
-        - $ref: '#/components/parameters/fixtureIdParam'
       responses:
         '204': # status code
           description: Deleted
 
   /tournaments/{tournamentId}/fixtures:
+    parameters:
+      - $ref: '#/components/parameters/tournamentIdParam'
+
     get:
       summary: Returns a list of fixtures for a tournament.
-      parameters:
-        - $ref: '#/components/parameters/tournamentIdParam'
       responses:
         '200': # status code
           description: OK
@@ -70,8 +82,6 @@ paths:
 
     post:
       summary: Add a fixture to a tournament.
-      parameters:
-        - $ref: '#/components/parameters/tournamentIdParam'
       requestBody:
         required: true
         content:

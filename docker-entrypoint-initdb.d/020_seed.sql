@@ -1,4 +1,4 @@
-SET TIME ZONE 'America/Los_Angeles';
+-- SET TIME ZONE 'America/Los_Angeles';
 
 \set tournament_name 'UEFA EURO 2020'
 
@@ -93,7 +93,7 @@ WITH ins (tournament_name, home_country, away_country, kickoff) AS
     -- (:'tournament_name', 'DEU', '', TIMESTAMP WITH TIME ZONE '2020-06-24T12:00:00-08')
 )
 INSERT INTO fixtures
-   (tournament_id, home, away, kickoff)
+   (tournament_id, home_team, away_team, kickoff)
 SELECT
     tournaments.id, home.id, away.id, ins.kickoff
 FROM ins

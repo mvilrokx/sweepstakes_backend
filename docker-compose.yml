@@ -32,6 +32,16 @@ services:
     ports:
       - 80:80
 
+  mock_api_server:
+    image: danielgtaylor/apisprout
+    command: /api.yaml
+    volumes:
+      - ${PWD}/openapi.yaml:/api.yaml
+    networks:
+      - backend
+    ports:
+      - 8000:8000
+
 networks:
   backend:
     driver: bridge

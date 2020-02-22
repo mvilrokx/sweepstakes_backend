@@ -13,3 +13,9 @@ $ docker-compose up
 ```
 
 Besides the DB, this will also start a PGAdmin instance that you can access from any web browser using `http://localhost`. The user and password are provided in the `docker-compose.yml` file.
+
+It will also start a Mock API Server that serves examples from the openapi.yaml file. E.g.:
+
+```shell
+curl localhost:8000/tournaments/1/fixtures
+```

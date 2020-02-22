@@ -10,6 +10,9 @@ servers:
     description: local development server
 
 paths:
+  #-------------------------------
+  # FIXTURES
+  #-------------------------------
   /tournaments/{tournamentId}/fixtures/{fixtureId}:
     get:
       summary: Returns a fixture for a tournament.
@@ -19,6 +22,25 @@ paths:
       responses:
         '200': # status code
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FixtureWithId'
+
+    put:
+      summary: Update a fixture to a tournament.
+      parameters:
+        - $ref: '#/components/parameters/tournamentIdParam'
+        - $ref: '#/components/parameters/fixtureIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Fixture'
+      responses:
+        '200': # status code
+          description: Updated
           content:
             application/json:
               schema:

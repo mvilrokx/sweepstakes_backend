@@ -28,7 +28,7 @@ paths:
                 $ref: '#/components/schemas/FixtureWithId'
 
     put:
-      summary: Update a fixture to a tournament.
+      summary: Update a fixture of a tournament.
       parameters:
         - $ref: '#/components/parameters/tournamentIdParam'
         - $ref: '#/components/parameters/fixtureIdParam'
@@ -47,7 +47,7 @@ paths:
                 $ref: '#/components/schemas/FixtureWithId'
 
     delete:
-      summary: Delete a fixture to a tournament.
+      summary: Delete a fixture from a tournament.
       parameters:
         - $ref: '#/components/parameters/tournamentIdParam'
         - $ref: '#/components/parameters/fixtureIdParam'

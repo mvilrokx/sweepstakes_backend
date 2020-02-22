@@ -22,18 +22,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Fixture'
-              example:
-                id: 4
-                tournament_name: UEFA EURO 2020
-                home_team: BEL
-                away_team: ITA
-                kickoff: 12-06-2020
-                home_goals: 1
-                away_goals: 0
-                home_penalties:
-                away_penalties:
-                group_stage: true
+                $ref: '#/components/schemas/FixtureWithId'
+
+    delete:
+      summary: Delete a fixture to a tournament.
+      parameters:
+        - $ref: '#/components/parameters/tournamentIdParam'
+        - $ref: '#/components/parameters/fixtureIdParam'
+      responses:
+        '204': # status code
+          description: Deleted
 
   /tournaments/{tournamentId}/fixtures:
     get:
@@ -47,38 +45,42 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Fixtures'
-              example:
-                - id: 4
-                  tournament_name: UEFA EURO 2020
-                  home_team: BEL
-                  away_team: ITA
-                  kickoff: 12-06-2020
-                  home_goals: 1
-                  away_goals: 0
-                  home_penalties:
-                  away_penalties:
-                  group_stage: true
-                - id: 5
-                  tournament_name: UEFA EURO 2020
-                  home_team: GER
-                  away_team: NLD
-                  kickoff: 13-06-2020
-                  home_goals: 1
-                  away_goals: 3
-                  home_penalties:
-                  away_penalties:
-                  group_stage: true
+
+    post:
+      summary: Add a fixture to a tournament.
+      parameters:
+        - $ref: '#/components/parameters/tournamentIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Fixture'
+
+      responses:
+        '201': # status code
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FixtureWithId'
 
 components:
   #-------------------------------
   # Reusable schemas (data models)
   #-------------------------------
   schemas:
-    Fixture: # Can be referenced as '#/components/schemas/Fixture'
+    FixtureId:
       type: object
       properties:
         id:
           type: integer
+      example:
+        id: 4
+
+    Fixture: # Can be referenced as '#/components/schemas/Fixture'
+      type: object
+      properties:
         tournament_name:
           type: string
         home_team:
@@ -98,10 +100,62 @@ components:
         group_stage:
           type: boolean
         # fixture_data:
+      example:
+        tournament_name: UEFA EURO 2020
+        home_team: BEL
+        away_team: ITA
+        kickoff: 12-06-2020
+        home_goals: 0
+        away_goals: 0
+        home_penalties:
+        away_penalties:
+        group_stage: true
+
+    FixtureWithId: # Can be referenced as '#/components/schemas/FixtureWithId'
+      allOf:
+        - $ref: '#/components/schemas/FixtureId'
+        - $ref: '#/components/schemas/Fixture'
+        # - type: object
+        #   properties:
+        #     id:
+        #       type: integer
+      example:
+        id: 4
+        tournament_name: UEFA EURO 2020
+        home_team: BEL
+        away_team: ITA
+        kickoff: 12-06-2020
+        home_goals: 0
+        away_goals: 0
+        home_penalties:
+        away_penalties:
+        group_stage: true
+
     Fixtures: # Can be referenced as '#/components/schemas/Fixtures'
       type: array
       items:
-        $ref: '#/components/schemas/Fixtures'
+        $ref: '#/components/schemas/FixtureWithId'
+      example:
+        - id: 4
+          tournament_name: UEFA EURO 2020
+          home_team: BEL
+          away_team: ITA
+          kickoff: 12-06-2020
+          home_goals: 1
+          away_goals: 0
+          home_penalties:
+          away_penalties:
+          group_stage: true
+        - id: 5
+          tournament_name: UEFA EURO 2020
+          home_team: GER
+          away_team: NLD
+          kickoff: 13-06-2020
+          home_goals: 1
+          away_goals: 3
+          home_penalties:
+          away_penalties:
+          group_stage: true
 
   #-------------------------------
   # Reusable operation parameters

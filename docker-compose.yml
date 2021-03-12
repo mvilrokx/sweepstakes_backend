@@ -1,7 +1,7 @@
-version: '3.7'
+version: "3.8"
 services:
   postgres:
-    image: postgres:12.2
+    image: postgres:13.2
     volumes:
       # - pg_data:/var/lib/postgresql/data
       - ${PWD}/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
@@ -14,13 +14,13 @@ services:
     ports:
       - 5432:5432
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready --dbname=sweepstakes --user=sweepstakes']
+      test: ["CMD-SHELL", "pg_isready --dbname=sweepstakes --user=sweepstakes"]
       interval: 5s
       timeout: 4s
       retries: 3
 
   pgadmin:
-    image: dpage/pgadmin4:latest
+    image: dpage/pgadmin4:5.0
     volumes:
       # - pgadmin_data:/var/lib/pgadmin
       - ${PWD}/servers.json:/pgadmin4/servers.json
@@ -33,14 +33,14 @@ services:
       - 80:80
 
   mock_api_server:
-    image: danielgtaylor/apisprout
-    command: /api.yaml
+    image: stoplight/prism:4
+    command: mock -p 4010 --host 0.0.0.0 /api.yaml
     volumes:
       - ${PWD}/openapi.yaml:/api.yaml
     networks:
       - backend
     ports:
-      - 8000:8000
+      - 4010:4010
 
 networks:
   backend:

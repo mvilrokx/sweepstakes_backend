@@ -25,13 +25,13 @@ const getContent = url =>
   })
 
 const createSeedCountriesFile = countries => {
-  const path = './docker-entrypoint-initdb.d/015_seed_countries.sql'
+  const path = '015_seed_countries.sql'
 
   // delete file
   try {
     fs.unlinkSync(path)
   } catch (err) {
-    console.warning(err)
+    console.warn(err)
   }
 
   countries.map(({ isoAlpha3, countryCode, countryName }) => {

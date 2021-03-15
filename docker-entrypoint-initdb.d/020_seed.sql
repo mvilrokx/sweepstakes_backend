@@ -41,7 +41,7 @@ DO $$
             BEGIN
                 INSERT INTO tournaments 
                     (name, starts_at, ends_at) 
-                VALUES (rec.tournament_name, rec.tournament_starts_at::TIMESTAMP WITH TIME ZONE, rec.tournament_ends_at::TIMESTAMP WITH TIME ZONE)
+                VALUES (rec.tournament_name, rec.tournament_starts_at::TIMESTAMPTZ, rec.tournament_ends_at::TIMESTAMPTZ)
                 ON CONFLICT (name) DO UPDATE
                     SET starts_at = excluded.starts_at, 
                         ends_at = excluded.ends_at
@@ -79,7 +79,7 @@ DO $$
         INSERT INTO fixtures
             (tournament_id, home_team, away_team, kickoff)
         VALUES
-           (returned_tournament_id, returned_home_id, returned_away_id, rec.kickoff::TIMESTAMP WITH TIME ZONE);
+           (returned_tournament_id, returned_home_id, returned_away_id, rec.kickoff::TIMESTAMPTZ);
 
         previous_group := current_group;
         previous_tournament := current_tournament;

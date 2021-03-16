@@ -3,6 +3,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const helmet = require("helmet");
 const createError = require("http-errors");
+var compression = require("compression");
 
 const morganMiddleware = require("./config/morganMiddleware.js");
 
@@ -16,6 +17,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(helmet());
+app.use(compression());
 
 app.use("/tournaments", tournamentsRouter);
 

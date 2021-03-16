@@ -3,7 +3,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const helmet = require("helmet");
 const createError = require("http-errors");
-var compression = require("compression");
+const compression = require("compression");
 
 const morganMiddleware = require("./config/morganMiddleware.js");
 

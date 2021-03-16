@@ -12,7 +12,7 @@ services:
       - POSTGRES_USER=sweepstakes
       - POSTGRES_PASSWORD=secret
     networks:
-      - backend
+      - sweepstakes-backend
     ports:
       - 5432:5432
     healthcheck:
@@ -30,7 +30,7 @@ services:
       - PGADMIN_DEFAULT_EMAIL=admin@sweepstakes.com
       - PGADMIN_DEFAULT_PASSWORD=secret
     networks:
-      - backend
+      - sweepstakes-backend
     ports:
       - 80:80
 
@@ -40,13 +40,13 @@ services:
     volumes:
       - ${PWD}/openapi.yaml:/api.yaml
     networks:
-      - backend
+      - sweepstakes-backend
     ports:
       - 4010:4010
 
 networks:
-  backend:
-    driver: bridge
+  sweepstakes-backend:
+    name: sweepstakes-backend
 # volumes:
 # pg_data:
 # pgadmin_data:

@@ -19,3 +19,23 @@ It will also start a Mock API Server that serves examples from the openapi.yaml 
 ```shell
 curl localhost:8000/tournaments/1/fixtures
 ```
+
+```shell
+$ docker run \
+    -it \
+    --rm \
+    --name sweepstakes-backend \
+    -p 3000:3000 \
+    -p 9229:9229 \
+    -p 9230:9230 \
+    -v "$PWD:/opt/app:delegated"
+    -v "$PWD/package.json:/opt/package.json"
+    -v "$PWD/package-lock.json:/opt/package-lock.json"
+    -e NODE_ENV=development \
+    -e POSTGRES_DB=sweepstakes \
+    -e POSTGRES_USER=sweepstakes \
+    -e POSTGRES_PASSWORD=secret \
+    -e DB_HOSTNAME=postgres
+    --network=sweepstakes-backend
+    backend:latest
+```

@@ -8,6 +8,7 @@ const compression = require("compression");
 const morganMiddleware = require("./config/morganMiddleware.js");
 
 const tournamentsRouter = require("./routes/tournaments");
+const healthRouter = require("./routes/health");
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(helmet());
 app.use(compression());
 
 app.use("/tournaments", tournamentsRouter);
+app.use("/healthz", healthRouter);
 
 // Route not found
 app.use((req, res, next) => {

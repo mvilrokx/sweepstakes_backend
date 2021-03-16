@@ -1,8 +1,10 @@
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
-const morganMiddleware = require("./config/morganMiddleware.js");
 const helmet = require("helmet");
+const createError = require("http-errors");
+
+const morganMiddleware = require("./config/morganMiddleware.js");
 
 const tournamentsRouter = require("./routes/tournaments");
 

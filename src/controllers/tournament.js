@@ -2,8 +2,7 @@ const tournamentService = require("../services/tournamentService.js");
 
 const show = async (req, res, next) => {
   try {
-    const result = await tournamentService.show(req.params?.tournamentId);
-    res.json(result.body);
+    res.json(await tournamentService.show(req.params?.tournamentId));
   } catch (error) {
     return next(error);
   }
@@ -11,8 +10,7 @@ const show = async (req, res, next) => {
 
 const index = async (req, res, next) => {
   try {
-    const result = await tournamentService.index();
-    res.json(result.body);
+    res.json(await tournamentService.index());
   } catch (error) {
     return next(error);
   }
@@ -29,19 +27,20 @@ const destroy = async (req, res, next) => {
 
 const create = async (req, res, next) => {
   try {
-    const result = await tournamentService.create(req.body);
-    if (result.success) {
-      res.json(result.body);
-    } else {
-      return next({
-        status: 400,
-        message: result.error.detail,
-        stack: result.error.stack,
-      });
-    }
+    res.json({ ...(await tournamentService.create(req.body)) });
   } catch (error) {
     return next(error);
   }
 };
 
-module.exports = { show, index, destroy, create };
+const update = async (req, res, next) => {
+  try {
+    res.json({
+      ...(await tournamentService.update(req.params?.tournamentId, req.body)),
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+module.exports = { show, index, destroy, create, update };

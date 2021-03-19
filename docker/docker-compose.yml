@@ -34,15 +34,15 @@ services:
     ports:
       - 80:80
 
-  mock_api_server:
-    image: stoplight/prism:4
-    command: mock -p 4010 --host 0.0.0.0 /api.yaml
-    volumes:
-      - ${PWD}/openapi.yaml:/api.yaml
-    networks:
-      - sweepstakes-backend
-    ports:
-      - 4010:4010
+  # mock_api_server:
+  #   image: stoplight/prism:4
+  #   command: mock -p 4010 --host 0.0.0.0 /api.yaml
+  #   volumes:
+  #     - ${PWD}/openapi.yaml:/api.yaml
+  #   networks:
+  #     - sweepstakes-backend
+  #   ports:
+  #     - 4010:4010
 
 networks:
   sweepstakes-backend:

@@ -8,6 +8,7 @@ const cors = require("cors");
 const passport = require("passport");
 
 const morganMiddleware = require("./config/morganMiddleware.js");
+const errorHandlerMiddleware = require("./middleware/errorHandler.js");
 
 const tournamentsRouter = require("./routes/tournaments");
 const usersRouter = require("./routes/users");
@@ -37,16 +38,6 @@ app.use((req, res, next) => {
 });
 
 // custom error handler
-app.use((error, req, res, next) => {
-  res.status(error.status || 500);
-  res.json({
-    status: error.status,
-    message: error.message,
-    stack:
-      process.env.NODE_ENV || "development" === "development"
-        ? error.stack
-        : "",
-  });
-});
+app.use(errorHandlerMiddleware);
 
 module.exports = app;

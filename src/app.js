@@ -4,12 +4,15 @@ const cookieParser = require("cookie-parser");
 const helmet = require("helmet");
 const createError = require("http-errors");
 const compression = require("compression");
-const cors = require('cors')
+const cors = require("cors");
+const passport = require("passport");
 
 const morganMiddleware = require("./config/morganMiddleware.js");
 
 const tournamentsRouter = require("./routes/tournaments");
+const usersRouter = require("./routes/users");
 const healthRouter = require("./routes/health");
+const authRouter = require("./routes/auth");
 
 const app = express();
 
@@ -20,10 +23,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(helmet());
 app.use(compression());
-app.use(cors())
+app.use(cors());
+app.use(passport.initialize());
 
 app.use("/tournaments", tournamentsRouter);
+app.use("/users", usersRouter);
 app.use("/healthz", healthRouter);
+app.use("/auth", authRouter);
 
 // Route not found
 app.use((req, res, next) => {

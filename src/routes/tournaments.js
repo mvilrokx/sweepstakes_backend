@@ -4,11 +4,26 @@ const router = express.Router();
 
 const tournamentController = require("../controllers/tournament.js");
 
-router.get("/", tournamentController.index);
-router.get("/:tournamentId", tournamentController.show);
-router.post("/", tournamentController.create);
-router.delete("/:tournamentId", tournamentController.destroy);
-router.put("/:tournamentId", tournamentController.update);
-router.patch("/:tournamentId", tournamentController.update);
+router
+  .route("/:tournamentId")
+  .all(function (req, res, next) {
+    // runs for all HTTP verbs first
+    // think of it as route specific middleware!
+    next();
+  })
+  .get(tournamentController.show)
+  .put(tournamentController.update)
+  .patch(tournamentController.update)
+  .delete(tournamentController.destroy);
+
+router
+  .route("/")
+  .all(function (req, res, next) {
+    // runs for all HTTP verbs first
+    // think of it as route specific middleware!
+    next();
+  })
+  .get(tournamentController.index)
+  .post(tournamentController.create);
 
 module.exports = router;

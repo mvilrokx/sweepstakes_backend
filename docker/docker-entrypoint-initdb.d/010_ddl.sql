@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS participants (
   league_id INT REFERENCES leagues ON DELETE CASCADE,
   role VARCHAR (255) NOT NULL DEFAULT 'PARTICIPANT',
   accepted BOOLEAN NOT NULL DEFAULT FALSE,
-  primary BOOLEAN NOT NULL DEFAULT FALSE,
+  primary_flag BOOLEAN NOT NULL DEFAULT FALSE,
   UNIQUE (user_id, league_id),  -- User can only be a participant in the same league once (but they can have many entries)
   CHECK (role IN ('PARTICIPANT', 'OWNER', 'ADMIN'))
 );

@@ -7,7 +7,7 @@ const Logger = require("../lib/logger.js");
 // Morgan to use our custom logger instead of the console.log.
 const stream = {
   // Use the http severity
-  write: (message) => Logger.http(message),
+  write: message => Logger.http(message),
 };
 
 // Skip all the Morgan http log if the
@@ -15,11 +15,9 @@ const stream = {
 // This method is not really needed here since
 // we already told to the logger that it should print
 // only warning and error messages in production.
-const skip = () => {
-  const env = process.env.NODE_ENV || "development";
-  return env !== "development";
-};
-
+const skip = req =>
+  (process.env.NODE_ENV || "development") !== "development" ||
+  req.originalUrl === "/healthz";
 // Build the morgan middleware
 const morganMiddleware = morgan(
   // Define message format string (this is the default one).

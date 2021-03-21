@@ -6,9 +6,7 @@ const ExtractJWT = require("passport-jwt").ExtractJwt;
 
 const userService = require("../services/userService");
 const Logger = require("../lib/logger.js");
-const { tokenSecret, authTokenIssuer } = require("../config")[
-  process.env.NODE_ENV || "development"
-];
+const { JwtTokenSecret, authTokenIssuer } = require("../config");
 
 // Passport Strategy for signing up new users
 passport.use(
@@ -56,7 +54,7 @@ passport.use(
   "jwt",
   new JWTstrategy(
     {
-      secretOrKey: tokenSecret,
+      secretOrKey: JwtTokenSecret,
       jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
       issuer: authTokenIssuer,
       // audience: "sweepstakes.com", // TODO: OVERWRITE!/ADD BACK WITH PROPER VALUE
@@ -118,7 +116,7 @@ module.exports = {
             sub: user.email,
             user: { id: user.id, email: user.email },
           };
-          const token = jwt.sign(body, tokenSecret);
+          const token = jwt.sign(body, JwtTokenSecret);
 
           return res.json({ token });
         });

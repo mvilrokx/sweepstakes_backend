@@ -1,6 +1,8 @@
 const morgan = require("morgan");
 const { StreamOptions } = require("morgan");
 
+const { healthCheckPath } = require(".");
+
 const Logger = require("../lib/logger.js");
 
 // Override the stream method by telling
@@ -17,7 +19,7 @@ const stream = {
 // only warning and error messages in production.
 const skip = req =>
   (process.env.NODE_ENV || "development") !== "development" ||
-  req.originalUrl === "/healthz";
+  req.originalUrl === healthCheckPath;
 // Build the morgan middleware
 const morganMiddleware = morgan(
   // Define message format string (this is the default one).

@@ -1,13 +1,15 @@
-const { username, password, host, port, database } = require("../config")[
-  process.env.NODE_ENV || "development"
-];
+const {
+  dbUsername,
+  dbPassword,
+  dbHost,
+  dbPort,
+  databaseName,
+} = require("../config");
 
-const initOptions = {};
-
-const pgp = require("pg-promise")(initOptions);
+const pgp = require("pg-promise")({});
 
 const db = pgp(
-  `postgres://${username}:${password}@${host}:${port}/${database}`
+  `postgres://${dbUsername}:${dbPassword}@${dbHost}:${dbPort}/${databaseName}`
 );
 
 module.exports = {

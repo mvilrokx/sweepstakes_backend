@@ -1,14 +1,23 @@
+const dotenv = require("dotenv");
+
+// Set the NODE_ENV to 'development' by default
+process.env.NODE_ENV = process.env.NODE_ENV || "development";
+
+const envFound = dotenv.config();
+if (envFound.error) {
+  // This error should crash whole process
+  throw new Error("Couldn't find .env file");
+}
+
 module.exports = {
-  development: {
-    port: process.env.DB_PORT || 5432,
-    database: "sweepstakes",
-    username: process.env.DB_USERNAME || "sweepstakes",
-    password: process.env.DB_PASSWORD || "secret",
-    host: process.env.DB_HOSTNAME || "localhost",
-    // TODO: Something like this require('crypto').randomBytes(64).toString('hex')
-    // but then only once, when the app gets started
-    tokenSecret: process.env.AUTHENTICATION_TOKEN_SECRET || "notsosecret",
-    authTokenIssuer:
-      process.env.AUTHENTICATION_TOKEN_ISSUER || "dev.sweepstakes.com",
-  },
+  appHost: process.env.APP_HOST,
+  port: process.env.PORT,
+  dbPort: process.env.DB_PORT,
+  databaseName: process.env.DATABASE,
+  dbUsername: process.env.DB_USERNAME,
+  dbPassword: process.env.DB_PASSWORD,
+  dbHost: process.env.DB_HOSTNAME,
+  JwtTokenSecret: require("crypto").randomBytes(64).toString("hex"),
+  authTokenIssuer: process.env.AUTHENTICATION_TOKEN_ISSUER,
+  healthCheckPath: process.env.HEALTHCHECK_PATH,
 };

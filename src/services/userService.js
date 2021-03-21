@@ -22,7 +22,7 @@ const show = async id =>
 const index = async () =>
   removeDisallowedFields(...(await db.any(sqls.indexUser)));
 
-const destroy = async id => await db.none(sqls.destroyUser, { id });
+const destroy = async id => await db.one(sqls.destroyUser, { id });
 
 const create = async ({ email, password, super_admin = false }) => {
   const hashedPwd = await bcrypt.hash(password, 10);

@@ -3,6 +3,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const JWTstrategy = require("passport-jwt").Strategy;
 const ExtractJWT = require("passport-jwt").ExtractJwt;
+const Boom = require("@hapi/boom");
 
 const userService = require("../services/userService");
 const Logger = require("../lib/logger.js");
@@ -86,16 +87,23 @@ module.exports = {
       //   return res.status(401).json({ errors: [UnConfirmedSignInError] });
       // }
 
-      req.logIn(user, { session: false }, err => {
-        if (err) {
-          return next(err);
-        }
-        next();
+      req.login(user, { session: false }, err => {
+        if (err) return next(err);
+
+        const body = {
+          iss: authTokenIssuer,
+          sub: user.email,
+          user: { id: user.id, email: user.email },
+        };
+        const token = jwt.sign(body, JwtTokenSecret);
+
+        return res.json({ token, user: req.user });
       });
     })(req, res, next);
   },
 
   login(req, res, next) {
+    console.log("login");
     passport.authenticate("login", (err, user, info) => {
       try {
         if (err) {
@@ -105,11 +113,11 @@ module.exports = {
           if (info) {
             Logger.debug(`User was not found, ${JSON.stringify(info)}`);
           }
-          return next(new Error("401"));
+          return next(Boom.unauthorized("unknown user"));
         }
 
-        req.login(user, { session: false }, async error => {
-          if (error) return next(error);
+        req.login(user, { session: false }, err => {
+          if (err) return next(err);
 
           const body = {
             iss: authTokenIssuer,
@@ -118,7 +126,7 @@ module.exports = {
           };
           const token = jwt.sign(body, JwtTokenSecret);
 
-          return res.json({ token });
+          return res.json({ token, user: req.user });
         });
       } catch (error) {
         return next(error);

@@ -2,13 +2,13 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const helmet = require("helmet");
-const createError = require("http-errors");
 const compression = require("compression");
 const cors = require("cors");
 const passport = require("passport");
 
 const morganMiddleware = require("./config/morganMiddleware.js");
 const errorHandlerMiddleware = require("./middleware/errorHandler.js");
+const missingPageMiddleware = require("./middleware/404.js");
 
 const tournamentsRouter = require("./routes/tournaments");
 const usersRouter = require("./routes/users");
@@ -33,9 +33,7 @@ app.use("/healthz", healthRouter);
 app.use("/auth", authRouter);
 
 // Route not found
-app.use((req, res, next) => {
-  next(createError(404));
-});
+app.use(missingPageMiddleware);
 
 // custom error handler
 app.use(errorHandlerMiddleware);

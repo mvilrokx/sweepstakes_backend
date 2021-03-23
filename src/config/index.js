@@ -19,5 +19,9 @@ module.exports = {
   dbHost: process.env.DB_HOSTNAME,
   JwtTokenSecret: require("crypto").randomBytes(64).toString("hex"),
   authTokenIssuer: process.env.AUTHENTICATION_TOKEN_ISSUER,
+  authTokenAlgorithm: process.env.AUTHENTICATION_TOKEN_ALGORITHM,
+  tokenExpiresIn: process.env.AUTHENTICATION_TOKEN_EXPIRES_IN,
+  bcryptWorkFactor: parseInt(process.env.BCRYPT_WORK_FACTOR, 10),
   healthCheckPath: process.env.HEALTHCHECK_PATH,
+  minimumPasswordLength: process.env.MINIMUM_PASSWORD_LENGTH,
 };

@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-
+const { bcryptWorkFactor } = require("../config");
 const { db } = require("../lib/db.js");
 const removeDisallowedFields = require("../lib/removeDisallowedFields.js")(
   "email",
@@ -14,18 +14,17 @@ let sqls = {};
 
 const show = async id =>
   removeDisallowedFields(await db.one(sqls.showUser, { id }));
-// const user = await db.oneOrNone(sqls.showUser, { id });
-// return user
-//   ? removeDisallowedFields(await db.oneOrNone(sqls.showUser, { id }))
-//   : user;
 
 const index = async () =>
-  removeDisallowedFields(...(await db.any(sqls.indexUser)));
+  // this weird construct is need for the edge case where there is only 1 user in the DB
+  // in that case removeDisallowedFields will return a User object instead of a array of User Objects
+  // however, this service should always return an array so this ensures that is the case
+  [removeDisallowedFields(...(await db.any(sqls.indexUser)))].flat();
 
 const destroy = async id => await db.one(sqls.destroyUser, { id });
 
 const create = async ({ email, password, super_admin = false }) => {
-  const hashedPwd = await bcrypt.hash(password, 10);
+  const hashedPwd = await bcrypt.hash(password, bcryptWorkFactor);
 
   return removeDisallowedFields(
     await db.one(sqls.createUser, {
@@ -43,7 +42,10 @@ const update = async (id, values) => {
     ...values,
   };
   if (values.password) {
-    updateValues.password = await bcrypt.hash(values.password, 10);
+    updateValues.password = await bcrypt.hash(
+      values.password,
+      bcryptWorkFactor
+    );
   }
   return removeDisallowedFields(await db.one(sqls.updateUser, updateValues));
 };

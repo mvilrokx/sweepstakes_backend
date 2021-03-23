@@ -4,10 +4,16 @@ const LocalStrategy = require("passport-local").Strategy;
 const JWTstrategy = require("passport-jwt").Strategy;
 const ExtractJWT = require("passport-jwt").ExtractJwt;
 const Boom = require("@hapi/boom");
+const { validationResult } = require("express-validator");
 
 const userService = require("../services/userService");
 const Logger = require("../lib/logger.js");
-const { JwtTokenSecret, authTokenIssuer } = require("../config");
+const {
+  JwtTokenSecret,
+  authTokenIssuer,
+  authTokenAlgorithm,
+  tokenExpiresIn,
+} = require("../config");
 
 // Passport Strategy for signing up new users
 passport.use(
@@ -20,7 +26,7 @@ passport.use(
 
         return done(null, user);
       } catch (error) {
-        done(error);
+        return done(error);
       }
     }
   )
@@ -64,7 +70,7 @@ passport.use(
       try {
         return done(null, token.user);
       } catch (error) {
-        done(error);
+        return done(error);
       }
     }
   )
@@ -73,19 +79,17 @@ passport.use(
 module.exports = {
   signup(req, res, next) {
     passport.authenticate("signup", (err, user, info) => {
+      Logger.debug("validationResult(req) = ", validationResult(req));
       if (err) {
         return next(err);
       }
-      // CUSTOM LOGIC (IF NEEDED)
-      // if (!user) {
-      //   if (info) {
-      //     logger.debug(`User was not found, ${JSON.stringify(info)}`);
-      //   }
-      //   return res.status(401).json({ errors: [InvalidCredentialsError] });
-      // }
-      // if (!user.confirmed) {
-      //   return res.status(401).json({ errors: [UnConfirmedSignInError] });
-      // }
+
+      if (!user) {
+        if (info) {
+          Logger.debug(`${JSON.stringify(info)}`);
+        }
+        return next(Boom.badRequest(info.message));
+      }
 
       req.login(user, { session: false }, err => {
         if (err) return next(err);
@@ -95,7 +99,10 @@ module.exports = {
           sub: user.email,
           user: { id: user.id, email: user.email },
         };
-        const token = jwt.sign(body, JwtTokenSecret);
+        const token = jwt.sign(body, JwtTokenSecret, {
+          algorithm: authTokenAlgorithm,
+          expiresIn: tokenExpiresIn,
+        });
 
         return res.json({ token, user: req.user });
       });
@@ -103,7 +110,6 @@ module.exports = {
   },
 
   login(req, res, next) {
-    console.log("login");
     passport.authenticate("login", (err, user, info) => {
       try {
         if (err) {
@@ -111,9 +117,13 @@ module.exports = {
         }
         if (!user) {
           if (info) {
-            Logger.debug(`User was not found, ${JSON.stringify(info)}`);
+            Logger.debug(
+              `User was not found or password was incorrect , ${JSON.stringify(
+                info
+              )}`
+            );
           }
-          return next(Boom.unauthorized("unknown user"));
+          return next(Boom.unauthorized("Incorrect credentials"));
         }
 
         req.login(user, { session: false }, err => {
@@ -124,7 +134,10 @@ module.exports = {
             sub: user.email,
             user: { id: user.id, email: user.email },
           };
-          const token = jwt.sign(body, JwtTokenSecret);
+          const token = jwt.sign(body, JwtTokenSecret, {
+            algorithm: authTokenAlgorithm,
+            expiresIn: tokenExpiresIn,
+          });
 
           return res.json({ token, user: req.user });
         });
@@ -133,6 +146,7 @@ module.exports = {
       }
     })(req, res, next);
   },
+
   jwt(req, res, next) {
     passport.authenticate("jwt", { session: false })(req, res, next);
   },

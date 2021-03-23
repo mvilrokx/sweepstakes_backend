@@ -1,3 +1,3 @@
-const createError = require("http-errors");
+const Boom = require("@hapi/boom");
 
-module.exports = (error, req, res) => next(createError(404));
+module.exports = (req, res, next) => next(Boom.notFound());

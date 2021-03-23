@@ -1,9 +1,9 @@
-module.exports = (...allowedKeys) => (...obj) => {
-  const sanitzedObj = obj.map(o =>
+module.exports = (...allowedKeys) => (...objs) => {
+  const sanitzedObjs = objs.map(obj =>
     allowedKeys.reduce(
-      (reducedObj, key) => ({ ...reducedObj, [key]: o[key] }),
+      (reducedObj, key) => ({ ...reducedObj, [key]: obj[key] }),
       {}
     )
   );
-  return sanitzedObj.length === 1 ? sanitzedObj[0] : sanitzedObj;
+  return sanitzedObjs.length === 1 ? sanitzedObjs[0] : sanitzedObjs;
 };

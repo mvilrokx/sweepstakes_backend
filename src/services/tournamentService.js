@@ -5,11 +5,11 @@ let sqls = {};
 
 (async () => (sqls = await loadSql(db, "../sql/tournament")))();
 
-const show = async id => await db.oneOrNone(sqls.showTournament, { id });
+const show = async id => await db.one(sqls.showTournament, { id });
 
 const index = async () => await db.any(sqls.indexTournament);
 
-const destroy = async id => await db.none(sqls.destroyTournament, { id });
+const destroy = async id => await db.one(sqls.destroyTournament, { id });
 
 const create = async ({ name, starts_at, ends_at }) =>
   await db.one(sqls.createTournament, {

@@ -1,8 +1,11 @@
 const express = require("express");
 
+const tournamentController = require("../controllers/tournament.js");
+const { jwt } = require("../middleware/authentication.js");
+
 const router = express.Router();
 
-const tournamentController = require("../controllers/tournament.js");
+router.all("*", jwt);
 
 router
   .route("/:tournamentId")
@@ -18,11 +21,6 @@ router
 
 router
   .route("/")
-  .all(function (req, res, next) {
-    // runs for all HTTP verbs first
-    // think of it as route specific middleware!
-    next();
-  })
   .get(tournamentController.index)
   .post(tournamentController.create);
 

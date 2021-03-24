@@ -1,5 +1,7 @@
 const express = require("express");
 
+const leaguesRouter = require("../routes/leagues");
+
 const tournamentController = require("../controllers/tournament.js");
 const { jwt } = require("../middleware/authentication.js");
 
@@ -23,5 +25,7 @@ router
   .route("/")
   .get(tournamentController.index)
   .post(tournamentController.create);
+
+router.use("/:tournamentId/leagues", leaguesRouter);
 
 module.exports = router;

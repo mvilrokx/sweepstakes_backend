@@ -9,6 +9,7 @@ const passport = require("passport");
 const morganMiddleware = require("./config/morganMiddleware.js");
 const errorHandlerMiddleware = require("./middleware/errorHandler.js");
 const missingPageMiddleware = require("./middleware/404.js");
+const { clientUrl } = require("./config");
 
 const tournamentsRouter = require("./routes/tournaments");
 const usersRouter = require("./routes/users");
@@ -24,7 +25,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(helmet());
 app.use(compression());
-app.use(cors());
+app.use(cors({ credentials: true, origin: clientUrl }));
 app.use(passport.initialize());
 
 app.use("/tournaments", tournamentsRouter);

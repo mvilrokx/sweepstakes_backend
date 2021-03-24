@@ -10,10 +10,20 @@ const userService = require("../services/userService");
 const Logger = require("../lib/logger.js");
 const {
   JwtTokenSecret,
+  JwtCookieName,
   authTokenIssuer,
   authTokenAlgorithm,
   tokenExpiresIn,
 } = require("../config");
+
+const cookieExtractor = req =>
+  req.cookies?.[JwtCookieName] ? req.cookies[JwtCookieName] : null;
+
+const cookieOptions = {
+  secure: process.env.NODE_ENV === "production" ? true : false,
+  httpOnly: true,
+  sameSite: "Strict",
+};
 
 // Passport Strategy for signing up new users
 passport.use(
@@ -62,7 +72,11 @@ passport.use(
   new JWTstrategy(
     {
       secretOrKey: JwtTokenSecret,
-      jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJWT.fromExtractors([
+        ExtractJWT.fromAuthHeaderAsBearerToken(),
+        cookieExtractor,
+      ]),
+      // jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
       issuer: authTokenIssuer,
       // audience: "sweepstakes.com", // TODO: OVERWRITE!/ADD BACK WITH PROPER VALUE
     },
@@ -104,6 +118,7 @@ module.exports = {
           expiresIn: tokenExpiresIn,
         });
 
+        res.cookie(JwtCookieName, token, cookieOptions);
         return res.json({ token, user: req.user });
       });
     })(req, res, next);
@@ -139,6 +154,7 @@ module.exports = {
             expiresIn: tokenExpiresIn,
           });
 
+          res.cookie(JwtCookieName, token, cookieOptions);
           return res.json({ token, user: req.user });
         });
       } catch (error) {

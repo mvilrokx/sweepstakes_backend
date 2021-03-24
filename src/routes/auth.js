@@ -1,5 +1,5 @@
 const express = require("express");
-const { body, check, normalizeEmail } = require("express-validator");
+const { body, normalizeEmail } = require("express-validator");
 const { validate } = require("../middleware/validate.js");
 const { minimumPasswordLength } = require("../config");
 

@@ -10,7 +10,14 @@ const qrec = db.$config.pgp.errors.queryResultErrorCode;
 module.exports = (error, req, res, next) => {
   const { message = "Oops! Something went wrong", isBoom, output } = error;
 
-  Logger.debug(JSON.stringify(error.constructor.name), JSON.stringify(error));
+  Logger.debug(
+    `Error constructor =  ${JSON.stringify(error.constructor.name)}`
+  );
+  Logger.debug(
+    `Full Error = ${
+      (JSON.stringify(error.constructor.name), JSON.stringify(error))
+    }`
+  );
 
   if (isBoom) {
     Logger.debug("isBoom!");
@@ -45,6 +52,7 @@ module.exports = (error, req, res, next) => {
       case "23514": // db-constraint error
       case "23502": // 	NOT NULL VIOLATION (i.e. a missing field)
       case "22007": // invalid data time format (is missing error.detail)
+      case "23503": // FK Constraint
         return res.status(400).json({
           message: error.detail,
           success: false,

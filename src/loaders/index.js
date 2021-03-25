@@ -11,19 +11,19 @@ const Logger = require("../lib/logger.js");
 
 module.exports = expressApp => {
   morganLoader(expressApp);
-  Logger.info("Morgan middleware initialized");
+  Logger.info("✅ Morgan middleware initialized");
   jsonBodyParserLoader(expressApp);
-  Logger.info("JSON Body Parser middleware initialized");
+  Logger.info("✅ JSON Body Parser middleware initialized");
   cookieParserLoader(expressApp);
-  Logger.info("Cookie Parser middleware initialized");
+  Logger.info("✅ Cookie Parser middleware initialized");
   helmetLoader(expressApp);
-  Logger.info("Helmet middleware initialized");
+  Logger.info("✅ Helmet middleware initialized");
   compressionLoader(expressApp);
-  Logger.info("Compression middleware initialized");
+  Logger.info("✅ Compression middleware initialized");
   corsLoader(expressApp);
-  Logger.info("CORS middleware initialized");
+  Logger.info("✅ CORS middleware initialized");
   passportLoader(expressApp);
-  Logger.info("Passport middleware initialized");
+  Logger.info("✅ Passport middleware initialized");
   expressLoader(expressApp);
-  Logger.info("Express initialized!!!");
+  Logger.info("✅ Express initialized!!!");
 };

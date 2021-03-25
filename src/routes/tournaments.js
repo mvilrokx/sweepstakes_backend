@@ -9,10 +9,10 @@ const router = express.Router();
 
 router.all("*", jwt);
 
-router.use("/:tournamentId/leagues", leaguesRouter);
+router.use("/:tournament_id/leagues", leaguesRouter);
 
 router
-  .route("/:tournamentId")
+  .route("/:tournament_id")
   .all(function (req, res, next) {
     // runs for all HTTP verbs first
     // think of it as route specific middleware!

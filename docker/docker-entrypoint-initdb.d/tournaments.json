@@ -3,6 +3,7 @@
     "name": "UEFA EURO 2020",
     "start_date": "2021-06-11 21:00:00 Europe/Brussels",
     "end_date": "2021-07-11 22:45:00 Europe/Brussels",
+    "logo_url": "https://img.uefa.com/imgml/uefacom/euro2020/logo.png",
     "groups": [
       {
         "name": "A",

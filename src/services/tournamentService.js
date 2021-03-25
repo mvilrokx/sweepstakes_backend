@@ -11,11 +11,12 @@ const index = async () => await db.any(sqls.indexTournament);
 
 const destroy = async id => await db.one(sqls.destroyTournament, { id });
 
-const create = async ({ name, starts_at, ends_at }) =>
+const create = async ({ name, starts_at, ends_at, logo_url }) =>
   await db.one(sqls.createTournament, {
     name,
     starts_at,
     ends_at,
+    logo_url,
   });
 
 const update = async (id, values) => {

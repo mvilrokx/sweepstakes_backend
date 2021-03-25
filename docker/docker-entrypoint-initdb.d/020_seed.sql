@@ -15,16 +15,17 @@ DO $$
 
     cur_tournaments CURSOR FOR
         -- This can probably be written more compact but haven't figured out how yet: https://stackoverflow.com/a/40121233
-        SELECT tournament_name, tournament_starts_at, tournament_ends_at, group_name, fixtures ->> 'home' as home, fixtures ->> 'away' as away, fixtures ->> 'kickoff' as kickoff
+        SELECT tournament_name, tournament_starts_at, tournament_ends_at, tournament_logo_url, group_name, fixtures ->> 'home' as home, fixtures ->> 'away' as away, fixtures ->> 'kickoff' as kickoff
         FROM (
-            SELECT tournament_name, tournament_starts_at, tournament_ends_at, groups ->> 'name' as group_name, jsonb_array_elements(groups -> 'fixtures') as fixtures
+            SELECT tournament_name, tournament_starts_at, tournament_ends_at, tournament_logo_url, groups ->> 'name' as group_name, jsonb_array_elements(groups -> 'fixtures') as fixtures
             FROM (
-                SELECT 
+                SELECT
                     tournaments ->> 'name' as tournament_name,
                     tournaments ->> 'start_date' as tournament_starts_at,
                     tournaments ->> 'end_date' as tournament_ends_at,
+                    tournaments ->> 'logo_url' as tournament_logo_url,
                     jsonb_array_elements(tournaments -> 'groups') as groups
-                FROM ( 
+                FROM (
                     SELECT jsonb_array_elements(data) as tournaments FROM tournaments_data
                 ) s
             ) s
@@ -33,46 +34,46 @@ DO $$
   BEGIN
 
     FOR rec IN cur_tournaments LOOP
-        
+
         current_tournament := rec.tournament_name;
         current_group := rec.group_name;
 
         IF current_tournament <> previous_tournament THEN
             BEGIN
-                INSERT INTO tournaments 
-                    (name, starts_at, ends_at) 
-                VALUES (rec.tournament_name, rec.tournament_starts_at::TIMESTAMPTZ, rec.tournament_ends_at::TIMESTAMPTZ)
+                INSERT INTO tournaments
+                    (name, starts_at, ends_at, logo_url)
+                VALUES (rec.tournament_name, rec.tournament_starts_at::TIMESTAMPTZ, rec.tournament_ends_at::TIMESTAMPTZ, rec.tournament_logo_url)
                 ON CONFLICT (name) DO UPDATE
-                    SET starts_at = excluded.starts_at, 
+                    SET starts_at = excluded.starts_at,
                         ends_at = excluded.ends_at
-                RETURNING id INTO returned_tournament_id;        
-            END;    
+                RETURNING id INTO returned_tournament_id;
+            END;
         END IF;
 
         IF current_group <> previous_group THEN
             BEGIN
                 INSERT INTO tournament_groups
                     (name, tournament_id)
-                VALUES 
+                VALUES
                     (rec.group_name, returned_tournament_id)
                 ON CONFLICT ON CONSTRAINT tournament_groups_tournament_id_name_key DO NOTHING
                 RETURNING id INTO returned_group_id;
-            END;    
+            END;
         END IF;
 
-        INSERT INTO tournament_participants
+        INSERT INTO tournament_teams
            (group_id, tournament_id, country_id)
         VALUES
            (returned_group_id, returned_tournament_id, rec.home)
-        ON CONFLICT ON CONSTRAINT tournament_participants_tournament_id_country_id_key DO UPDATE
+        ON CONFLICT ON CONSTRAINT tournament_teams_tournament_id_country_id_key DO UPDATE
             SET country_id = excluded.country_id
         RETURNING id INTO returned_home_id;
 
-        INSERT INTO tournament_participants
+        INSERT INTO tournament_teams
            (group_id, tournament_id, country_id)
         VALUES
            (returned_group_id, returned_tournament_id, rec.away)
-        ON CONFLICT ON CONSTRAINT tournament_participants_tournament_id_country_id_key DO UPDATE
+        ON CONFLICT ON CONSTRAINT tournament_teams_tournament_id_country_id_key DO UPDATE
             SET country_id = excluded.country_id
         RETURNING id INTO returned_away_id;
 

@@ -13,11 +13,8 @@ module.exports = (error, req, res, next) => {
   Logger.debug(
     `Error constructor =  ${JSON.stringify(error.constructor.name)}`
   );
-  Logger.debug(
-    `Full Error = ${
-      (JSON.stringify(error.constructor.name), JSON.stringify(error))
-    }`
-  );
+  Logger.debug(`Full Error = ${JSON.stringify(error)}`);
+  Logger.debug(`Full Error = ${error}`);
 
   if (isBoom) {
     Logger.debug("isBoom!");

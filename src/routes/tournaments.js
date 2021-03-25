@@ -9,6 +9,8 @@ const router = express.Router();
 
 router.all("*", jwt);
 
+router.use("/:tournamentId/leagues", leaguesRouter);
+
 router
   .route("/:tournamentId")
   .all(function (req, res, next) {
@@ -25,7 +27,5 @@ router
   .route("/")
   .get(tournamentController.index)
   .post(tournamentController.create);
-
-router.use("/:tournamentId/leagues", leaguesRouter);
 
 module.exports = router;

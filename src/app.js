@@ -15,6 +15,7 @@ const tournamentsRouter = require("./routes/tournaments");
 const usersRouter = require("./routes/users");
 const healthRouter = require("./routes/health");
 const authRouter = require("./routes/auth");
+const leaguesRouter = require("./routes/leagues");
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use("/tournaments", tournamentsRouter);
 app.use("/users", usersRouter);
 app.use("/healthz", healthRouter);
 app.use("/auth", authRouter);
+app.use("/leagues", leaguesRouter);
 
 // Route not found
 app.use(missingPageMiddleware);

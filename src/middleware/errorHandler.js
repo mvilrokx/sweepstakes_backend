@@ -13,8 +13,8 @@ module.exports = (error, req, res, next) => {
   Logger.debug(
     `Error constructor =  ${JSON.stringify(error.constructor.name)}`
   );
-  Logger.debug(`Full Error = ${JSON.stringify(error)}`);
-  Logger.debug(`Full Error = ${error}`);
+  Logger.debug(`Full Error JSON = ${JSON.stringify(error)}`);
+  Logger.debug(`Full Error Object = ${error}`);
 
   if (isBoom) {
     Logger.debug("isBoom!");
@@ -45,11 +45,17 @@ module.exports = (error, req, res, next) => {
     Logger.debug(JSON.stringify(error));
     // is node-postgres error
     switch (error.code) {
-      case "23505": // duplicate key
       case "23514": // db-constraint error
       case "23502": // 	NOT NULL VIOLATION (i.e. a missing field)
       case "22007": // invalid data time format (is missing error.detail)
       case "23503": // FK Constraint
+        return res.status(400).json({
+          message: error.message,
+          success: false,
+          error,
+        });
+        break;
+      case "23505": // duplicate key
         return res.status(400).json({
           message: error.detail,
           success: false,

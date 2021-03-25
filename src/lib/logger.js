@@ -1,4 +1,5 @@
-const winston = require("winston");
+const { addColors, format, createLogger, transports } = require("winston");
+const { combine, timestamp, colorize, label, printf } = format;
 
 const levels = {
   error: 0,
@@ -18,30 +19,32 @@ const colors = {
   debug: "white",
 };
 
-winston.addColors(colors);
+addColors(colors);
 
-const format = winston.format.combine(
-  winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss:ms" }),
-  winston.format.colorize({ all: true }),
-  winston.format.printf(
-    info => `${info.timestamp} ${info.level}: ${info.message}`
+const myFormat = combine(
+  label({ label: "sweepstakes-backend" }),
+  timestamp({ format: "YYYY-MM-DD HH:mm:ss:ms" }),
+  colorize({ all: true }),
+  printf(
+    ({ timestamp, label, level, message }) =>
+      `${timestamp} [${label}] ${level}: ${message}`
   )
 );
 
-const transports = [
-  new winston.transports.Console(),
-  new winston.transports.File({
+const myTransports = [
+  new transports.Console(),
+  new transports.File({
     filename: "logs/error.log",
     level: "error",
   }),
-  new winston.transports.File({ filename: "logs/all.log" }),
+  new transports.File({ filename: "logs/all.log" }),
 ];
 
-const Logger = winston.createLogger({
+const Logger = createLogger({
   level: level(),
   levels,
-  format,
-  transports,
+  format: myFormat,
+  transports: myTransports,
 });
 
 module.exports = Logger;

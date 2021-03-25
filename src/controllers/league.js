@@ -10,7 +10,7 @@ const show = async (req, res, next) => {
 
 const index = async (req, res, next) => {
   try {
-    res.json(await leagueService.index());
+    res.json(await leagueService.index(req.params?.tournamentId));
   } catch (error) {
     return next(error);
   }

@@ -7,7 +7,8 @@ let sqls = {};
 
 const show = async id => await db.one(sqls.showLeague, { id });
 
-const index = async () => await db.any(sqls.indexLeague);
+const index = async tournamentId =>
+  await db.any(sqls.indexLeagues, { tournamentId });
 
 const destroy = async id => await db.one(sqls.destroyLeague, { id });
 

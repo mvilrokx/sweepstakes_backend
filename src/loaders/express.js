@@ -9,6 +9,8 @@ const usersRouter = require("../routes/users");
 const healthRouter = require("../routes/health");
 const authRouter = require("../routes/auth");
 const leaguesRouter = require("../routes/leagues");
+const userEntriesRouter = require("../routes/userEntries");
+const leagueUserRouter = require("../routes/leagueUsers");
 
 module.exports = expressApp => {
   expressApp.use(express.urlencoded({ extended: false }));
@@ -19,6 +21,8 @@ module.exports = expressApp => {
   expressApp.use("/healthz", healthRouter);
   expressApp.use("/auth", authRouter);
   expressApp.use("/leagues", leaguesRouter);
+  expressApp.use("/entries", userEntriesRouter);
+  expressApp.use("/league_users", leagueUserRouter);
 
   // Route not found
   expressApp.use(missingPageMiddleware);

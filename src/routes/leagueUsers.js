@@ -1,11 +1,15 @@
 const express = require("express");
 
+const userEntriesRouter = require("./userEntries.js");
+
 const leagueUserController = require("../controllers/leagueUser.js");
 const { jwt } = require("../middleware/authentication.js");
 
 const router = express.Router({ mergeParams: true });
 
 router.all("*", jwt);
+
+router.use("/:league_user_id/entries", userEntriesRouter);
 
 router;
 // .route("/:league_id")

@@ -1,6 +1,6 @@
 const express = require("express");
 
-const leaguesUserRouter = require("../routes/leagueUsers");
+const leaguesUserRouter = require("./leagueUsers.js");
 
 const leagueController = require("../controllers/league.js");
 const { jwt } = require("../middleware/authentication.js");

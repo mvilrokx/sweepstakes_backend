@@ -1,6 +1,7 @@
 const express = require("express");
 
-const leaguesRouter = require("../routes/leagues");
+const leaguesRouter = require("./leagues.js");
+const tournamentGroupsRouter = require("./tournamentGroups.js");
 
 const tournamentController = require("../controllers/tournament.js");
 const { jwt } = require("../middleware/authentication.js");
@@ -10,6 +11,7 @@ const router = express.Router();
 router.all("*", jwt);
 
 router.use("/:tournament_id/leagues", leaguesRouter);
+router.use("/:tournament_id/groups", tournamentGroupsRouter);
 
 router
   .route("/:tournament_id")
